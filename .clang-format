@@ -1,0 +1,40 @@
+AlignAfterOpenBracket: true
+AlignConsecutiveMacros: true
+AlignConsecutiveBitFields: true
+AllowAllArgumentsOnNextLine: false
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: false
+AlwaysBreakAfterReturnType: TopLevelDefinitions
+BasedOnStyle: LLVM
+BraceWrapping:
+  AfterControlStatement: false
+  AfterEnum: false
+  AfterFunction: true
+  AfterStruct: false
+  BeforeElse: false
+  SplitEmptyFunction: true
+BinPackArguments: true
+BinPackParameters: true
+BreakBeforeBraces: Custom
+ColumnLimit: 120
+ContinuationIndentWidth: 4
+Cpp11BracedListStyle: true
+BreakStringLiterals: false
+
+IncludeBlocks: Preserve
+IncludeCategories:
+  - Regex:           '<[[:alnum:].]+>'
+    Priority:        1
+  - Regex:           '.*\/.*'
+    Priority:        2
+  - Regex:           '.*'
+    Priority:        3
+IndentWidth: 4
+PenaltyBreakBeforeFirstCallParameter: 1
+PenaltyExcessCharacter: 100
+SpaceAfterCStyleCast: false
+SpaceBeforeCpp11BracedList: false
+SpaceBeforeParens: ControlStatementsExceptControlMacros
+SpaceBeforeCtorInitializerColon: false
+SpacesInContainerLiterals: false
+
