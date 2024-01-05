@@ -1,5 +1,5 @@
-#ifndef MPV_GUI_FORMATS_HPP
-#define MPV_GUI_FORMATS_HPP
+#ifndef MPV_YTDL_GUI_FORMATS_H
+#define MPV_YTDL_GUI_FORMATS_H
 
 #include <QAbstractListModel>
 

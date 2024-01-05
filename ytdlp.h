@@ -1,5 +1,5 @@
-#ifndef MPV_GUI_YTDLP_HPP
-#define MPV_GUI_YTDLP_HPP
+#ifndef MPV_YTDL_GUI_YTDLP_H
+#define MPV_YTDL_GUI_YTDLP_H
 
 #include <string>
 #include <vector>

@@ -1,5 +1,5 @@
-#ifndef MPV_GUI_MAINFORM_HPP
-#define MPV_GUI_MAINFORM_HPP
+#ifndef MPV_YTDL_GUI_MAINFORM_H
+#define MPV_YTDL_GUI_MAINFORM_H
 
 #include <QObject>
 #include <QDBusVariant>
