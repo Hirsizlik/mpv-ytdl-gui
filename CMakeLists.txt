@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt6 6.5 REQUIRED COMPONENTS Gui Quick DBus)
 find_package(Python REQUIRED Development)
+include(cmake/backtrace.cmake)
 
 set(CMAKE_AUTORCC ON)
 
@@ -25,4 +26,5 @@ target_link_libraries(mpv-ytdl-gui PRIVATE
     Qt6::Quick
     Qt6::DBus
     Python::Python
+    libbacktrace
 )
