@@ -6,6 +6,7 @@
 #include <QStringList>
 #include <QStringListModel>
 #include "formats.h"
+#include "passwordhandler.h"
 
 class MainForm : public QObject {
     Q_OBJECT
@@ -14,12 +15,13 @@ class MainForm : public QObject {
 
 public:
     explicit MainForm(QObject *parent = nullptr);
+    ~MainForm();
     FormatDataModel* getFormatsModel() { return &formatsModel; }
     bool hasPassword() const { return !password.isEmpty(); };
 
 public slots:
     void loadPassword(const QString& p1, const QString& p2);
-    void passwordPromptCompleted(const bool dismissed, const QDBusVariant& value);
+    void passwordLoaded(const QString& password);
     void loadFormats(const QString& username, const QString& url, const QString& cookiesFromBrowser);
     void start(const QString& username, const QString& sublang, const QString& cookiesFromBrowser);
 
@@ -31,8 +33,8 @@ signals:
 
 private:
     QString password;
+    PasswordHandler *passwordHandler = new PasswordHandler();
     FormatDataModel formatsModel;
-    QString getSecret(const QDBusObjectPath &pathToUnlockedPassword);
 };
 
 #endif

@@ -13,7 +13,13 @@ set(CMAKE_AUTORCC ON)
 qt_policy(SET QTP0001 NEW)
 qt_standard_project_setup()
 
-qt_add_executable(mpv-ytdl-gui main.cpp mainform.cpp formats.cpp qml.qrc ytdlp.cpp)
+qt_add_executable(mpv-ytdl-gui
+    main.cpp mainform.cpp
+    formats.cpp
+    qml.qrc
+    ytdlp.cpp)
+
+qt_add_library(passwordhandler passwordhandler.cpp)
 
 qt_add_qml_module(mpv-ytdl-gui
     URI mpvytdlgui
@@ -21,10 +27,14 @@ qt_add_qml_module(mpv-ytdl-gui
         main.qml
 )
 
+target_link_libraries(passwordhandler
+    Qt6::DBus
+)
+
 target_link_libraries(mpv-ytdl-gui PRIVATE
     Qt6::Gui
     Qt6::Quick
-    Qt6::DBus
     Python::Python
     libbacktrace
+    passwordhandler
 )
