@@ -112,6 +112,7 @@ yt::loadFormats(const char *const username, const char *const password, const ch
                 const char *const cookiesBrowser)
 {
     using namespace yt;
+    PyInitialize();
     PyObject *pyModule = PyImport_ImportModule("__main__");
     if (!pyModule)
         throw std::runtime_error("Error importing __main__");

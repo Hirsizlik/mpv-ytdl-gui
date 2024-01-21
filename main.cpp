@@ -1,5 +1,3 @@
-#define PY_SSIZE_T_CLEAN
-#include <Python.h>
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
@@ -59,8 +57,5 @@ main(int argc, char **argv)
     engine.rootContext()->setContextProperty("mf", &mf);
     engine.load(url);
 
-    Py_Initialize();
-    int code = app.exec();
-    Py_Finalize();
-    return code;
+    return app.exec();
 }

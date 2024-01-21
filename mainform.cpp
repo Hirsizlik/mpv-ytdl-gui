@@ -4,12 +4,12 @@
 #include <iostream>
 #include <unistd.h>
 #include "formats.h"
-#include "ytdlp.h"
 
 MainForm::MainForm(QObject *parent): QObject(parent)
 {
     connect(passwordHandler, &PasswordHandler::passwordLoaded, this, &MainForm::passwordLoaded);
     connect(passwordHandler, &PasswordHandler::passwordError, this, &MainForm::passwordError);
+    connect(&ytFutureWatcher, &QFutureWatcher<FormatPair>::finished, this, &MainForm::formatsLoaded);
 }
 
 MainForm::~MainForm()
@@ -63,11 +63,21 @@ MainForm::loadFormats(const QString &username, const QString &url, const QString
         return;
     }
 
-    try {
-        auto data = yt::loadFormats(username.toUtf8(), password.toUtf8(), url.toUtf8(), cookiesFromBrowser.toUtf8());
-        formatsModel.setFormatList(url, convertFromYtdlp(data));
-    } catch (const std::runtime_error &) {
+    ytFuture = QtConcurrent::run(yt::loadFormats, username.toUtf8(), password.toUtf8(), url.toUtf8(),
+                                 cookiesFromBrowser.toUtf8())
+                   .then([url](std::vector<yt::YtdlpData> data) { return std::make_pair(url, convertFromYtdlp(data)); })
+                   .onFailed([](std::runtime_error) { return std::make_pair("", QList<FormatData>()); });
+    ytFutureWatcher.setFuture(ytFuture);
+}
+
+void
+MainForm::formatsLoaded()
+{
+    FormatPair result = ytFutureWatcher.future().result();
+    if (result.second.empty()) {
         emit ytdlpError();
+    } else {
+        formatsModel.setFormatList(result.first, std::move(result.second));
     }
 }
 
