@@ -17,7 +17,7 @@ qt_add_executable(mpv-ytdl-gui
     main.cpp mainform.cpp
     formats.cpp
     qml.qrc
-    ytdlp.cpp)
+)
 
 qt_add_library(passwordhandler STATIC
     passwordhandler.cpp
@@ -29,14 +29,32 @@ qt_add_qml_module(mpv-ytdl-gui
         main.qml
 )
 
-target_link_libraries(passwordhandler
+include(FetchContent)
+FetchContent_Declare(
+    Corrosion
+    GIT_REPOSITORY https://github.com/corrosion-rs/corrosion.git
+    GIT_TAG master
+)
+FetchContent_MakeAvailable(Corrosion)
+corrosion_import_crate(MANIFEST_PATH rust/Cargo.toml)
+
+corrosion_add_cxxbridge(mpv-ytdl-gui-rs-cxx
+    CRATE mpv-ytdl-gui-rs
+    FILES lib.rs
+)
+
+target_link_libraries(mpv-ytdl-gui-rs-cxx PRIVATE
+    Python::Python
+)
+
+target_link_libraries(passwordhandler PUBLIC
     Qt6::DBus
 )
 
 target_link_libraries(mpv-ytdl-gui PRIVATE
     Qt6::Gui
     Qt6::Quick
-    Python::Python
     libbacktrace
     passwordhandler
+    mpv-ytdl-gui-rs-cxx
 )

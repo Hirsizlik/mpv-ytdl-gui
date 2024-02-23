@@ -4,3 +4,4 @@
 .rcc
 build*
 *.kdev4
+target

@@ -1,0 +1,12 @@
+[package]
+name = "mpv-ytdl-gui-rs"
+version = "0.1.0"
+license = "GPL-3"
+edition = "2021"
+
+[dependencies]
+cxx = "1.0"
+pyo3 = "0.20.3"
+
+[lib]
+crate-type=["staticlib"]
