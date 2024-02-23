@@ -3,6 +3,8 @@
 #include <exception>
 #include <iostream>
 #include <unistd.h>
+#include "mpv-ytdl-gui-rs-cxx/lib.h"
+#include "rust/cxx.h"
 #include "formats.h"
 
 MainForm::MainForm(QObject *parent): QObject(parent)
@@ -30,27 +32,26 @@ MainForm::passwordLoaded(const QString &password)
 }
 
 FormatData
-map(const yt::YtdlpData &data)
+map(const VideoFormat &data)
 {
     QString vcodec;
-    if (data.vcodec() != "none") {
-        vcodec = QString::fromStdString(data.vcodec());
+    if (data.vcodec != "none") {
+        vcodec = QString::fromUtf8(data.vcodec);
     }
     QString acodec;
-    if (data.acodec() != "none") {
-        acodec = QString::fromStdString(data.acodec());
+    if (data.acodec != "none") {
+        acodec = QString::fromUtf8(data.acodec);
     }
-    return FormatData(QString::fromStdString(data.id()), QString::fromStdString(data.name()),
-                      QString::fromStdString(data.resolution()), vcodec, acodec, data.fps(), data.filesize(),
-                      data.filesize_estimate(), data.tbr());
+    return FormatData(QString::fromUtf8(data.id), QString::fromUtf8(data.name), QString::fromUtf8(data.resolution),
+                      vcodec, acodec, data.fps, data.filesize, data.filesize_is_estimate, data.tbr);
 }
 
 QList<FormatData>
-convertFromYtdlp(const std::vector<yt::YtdlpData> &data)
+convertFromVideoFormat(const rust::cxxbridge1::Vec<VideoFormat> &data)
 {
     QList<FormatData> list;
-    for (const yt::YtdlpData &y : data) {
-        list.emplaceBack(map(y));
+    for (const VideoFormat &vf : data) {
+        list.emplaceBack(map(vf));
     }
     return list;
 }
@@ -63,9 +64,13 @@ MainForm::loadFormats(const QString &username, const QString &url, const QString
         return;
     }
 
-    ytFuture = QtConcurrent::run(yt::loadFormats, username.toUtf8(), password.toUtf8(), url.toUtf8(),
-                                 cookiesFromBrowser.toUtf8())
-                   .then([url](std::vector<yt::YtdlpData> data) { return std::make_pair(url, convertFromYtdlp(data)); })
+    auto videoToPair = [url](rust::cxxbridge1::Vec<VideoFormat> data) {
+        return std::make_pair(url, convertFromVideoFormat(data));
+    };
+
+    ytFuture = QtConcurrent::run(load_video_formats, username.toStdString(), password.toStdString(), url.toStdString(),
+                                 cookiesFromBrowser.toStdString())
+                   .then(videoToPair)
                    .onFailed([](std::runtime_error) { return std::make_pair("", QList<FormatData>()); });
     ytFutureWatcher.setFuture(ytFuture);
 }
