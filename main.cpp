@@ -39,6 +39,9 @@ main(int argc, char **argv)
 {
     bt_state = backtrace_create_state("mpv-ytdl-gui", 0, bt_error, nullptr);
     signal(SIGSEGV, handler);
+    signal(SIGABRT, handler);
+    signal(SIGFPE, handler);
+    signal(SIGILL, handler);
 
     QGuiApplication app(argc, argv);
     app.setOrganizationName("mpv-ytdl-gui");
