@@ -19,7 +19,9 @@ qt_add_executable(mpv-ytdl-gui
     qml.qrc
     ytdlp.cpp)
 
-qt_add_library(passwordhandler passwordhandler.cpp)
+qt_add_library(passwordhandler STATIC
+    passwordhandler.cpp
+)
 
 qt_add_qml_module(mpv-ytdl-gui
     URI mpvytdlgui
