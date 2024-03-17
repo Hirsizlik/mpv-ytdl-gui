@@ -66,7 +66,7 @@ fn read_list_item(list_item: &PyDict, duration: u64) -> PyResult<VideoFormat> {
 
     match list_item.get_item("filesize")?.filter(|n| !n.is_none()) {
         None => {
-            filesize = (duration as f64 * tbr) as u64;
+            filesize = (duration as f64 * tbr * 1024.0 / 8.0) as u64;
             filesize_is_estimate = true;
         }
         Some(v) => {
