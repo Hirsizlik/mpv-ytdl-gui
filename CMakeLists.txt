@@ -34,6 +34,7 @@ FetchContent_Declare(
     Corrosion
     GIT_REPOSITORY https://github.com/corrosion-rs/corrosion.git
     GIT_TAG master
+    FIND_PACKAGE_ARGS NAMES Corrosion
 )
 FetchContent_MakeAvailable(Corrosion)
 corrosion_import_crate(MANIFEST_PATH rust/Cargo.toml)
