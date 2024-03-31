@@ -8,5 +8,8 @@ edition = "2021"
 cxx = "1.0"
 pyo3 = "0.20.3"
 
+[dev-dependencies]
+cxxbridge-cmd = "1.0"
+
 [lib]
 crate-type=["staticlib"]
