@@ -1,0 +1,8 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Comment=
+Terminal=false
+Name=mpv-ytdl-gui
+Exec=mpv-ytdl-gui
+Type=Application
+Categories=Video;Utility
