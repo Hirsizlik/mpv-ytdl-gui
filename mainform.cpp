@@ -109,7 +109,8 @@ MainForm::start(const QString &username, const QString &sublang, const QString &
     if (0 == fork()) {
         QList<std::pair<QString, QString>> ytdlRawOptionList;
         ytdlRawOptionList.emplaceBack("all-subs", "");
-        ytdlRawOptionList.emplaceBack("cookies-from-browser", cookiesBrowser);
+        if (!cookiesBrowser.isEmpty())
+            ytdlRawOptionList.emplaceBack("cookies-from-browser", cookiesBrowser);
 
         if (username != "" && password != "") {
             ytdlRawOptionList.emplaceBack("username", username);
