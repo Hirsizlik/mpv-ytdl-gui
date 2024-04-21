@@ -10,13 +10,14 @@ pub fn load_video_formats(
     password: &str,
     url: &str,
     cookies_browser: &str,
+    user_agent: &str,
 ) -> Vec<VideoFormat> {
     pyo3::prepare_freethreaded_python();
     let result = Python::with_gil(|py| -> PyResult<Vec<VideoFormat>> {
         let fun: Py<PyAny> = PyModule::from_code(py, PY_SCRIPT, "", "")?
             .getattr("get_video_formats")?
             .into();
-        let args = PyTuple::new(py, &[url, username, password, cookies_browser]);
+        let args = PyTuple::new(py, &[url, username, password, cookies_browser, user_agent]);
         let fun_result = fun.call1(py, args)?;
         let vfs: &PyTuple = fun_result.downcast::<PyTuple>(py)?;
         let duration_item = vfs.get_item(0)?;
@@ -119,6 +120,7 @@ mod ffi {
             password: &str,
             url: &str,
             cookies_browser: &str,
+            user_agent: &str,
         ) -> Vec<VideoFormat>;
     }
 }

@@ -30,8 +30,10 @@ class MainForm : public QObject {
   public slots:
     void loadPassword(const QString &p1, const QString &p2);
     void passwordLoaded(const QString &password);
-    void loadFormats(const QString &username, const QString &url, const QString &cookiesFromBrowser);
-    void start(const QString &username, const QString &sublang, const QString &cookiesFromBrowser);
+    void loadFormats(const QString &username, const QString &url, const QString &cookiesFromBrowser,
+                     const QString &userAgent);
+    void start(const QString &username, const QString &sublang, const QString &cookiesFromBrowser,
+               const QString &userAgent);
 
   signals:
     void formatsChanged();

@@ -20,56 +20,32 @@ ApplicationWindow {
         columns: 3
         width: parent.width - 5
         TextField {
-            id: "username"
-            placeholderText: "Username"
-            Layout.columnSpan: 1
-            Layout.fillWidth: true
-        }
-        TextField {
-            id: "sublang"
-            placeholderText: "Sub-Language"
-            Layout.fillWidth: true
-        }
-        TextField {
-            id: "cookiesFromBrowser"
-            placeholderText: "Cookies from browser"
-            Layout.fillWidth: true
-        }
-        TextField {
-            id: "passAttribute"
-            placeholderText: "Attribute"
-            Layout.fillWidth: true
-        }
-        TextField {
-            id: "passValue"
-            placeholderText: "Value"
-            Layout.fillWidth: true
-        }
-        Button {
-            text: "Load password"
-            onClicked: mf.loadPassword(passAttribute.text, passValue.text)
-            Layout.fillWidth: true
-        }
-        TextField {
             id: "videoUrl"
             placeholderText: "Video URL";
             Layout.columnSpan: 2;
             Layout.fillWidth: true
         }
-        Button {
-            text: "Load formats";
-            onClicked: mf.loadFormats(username.text, videoUrl.text, cookiesFromBrowser.text);
-            Layout.fillWidth: true
+        RowLayout {
+            Button {
+                text: "Load formats";
+                onClicked: mf.loadFormats(username.text, videoUrl.text, cookiesFromBrowser.text, userAgent.text);
+                Layout.fillWidth: false
+            }
+            Button {
+                text: "Settings";
+                onClicked: settingsDialog.open();
+                Layout.fillWidth: false
+            }
         }
         Button {
             id: start
             text: "Start";
-            onClicked: mf.start(username.text, sublang.text, cookiesFromBrowser.text);
+            onClicked: mf.start(username.text, sublang.text, cookiesFromBrowser.text, userAgent.text);
             Layout.columnSpan: 3;
             Layout.fillWidth: true
         }
         ScrollView {
-            implicitHeight: window.height - username.height - passAttribute.height - videoUrl.height - start.height - 20
+            implicitHeight: window.height - videoUrl.height - start.height - 20
             Layout.columnSpan: 3
             Layout.fillWidth: true
             ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
@@ -179,6 +155,7 @@ ApplicationWindow {
             property alias sublang: sublang.text
             property alias videoUrl: videoUrl.text
             property alias cookiesFromBrowser: cookiesFromBrowser.text
+            property alias userAgent: userAgent.text
         }
     }
 
@@ -205,6 +182,54 @@ ApplicationWindow {
             function onNoSelectionError() {
                 dialogLabel.text = "No formats are selected."
                 okDialog.open()
+            }
+        }
+    }
+
+    Dialog {
+        id: "settingsDialog"
+        title: "Settings"
+        anchors.centerIn: parent
+        standardButtons: Dialog.Ok
+        width: 500
+        contentItem: ColumnLayout {
+            TextField {
+                id: "username"
+                placeholderText: "Username"
+                Layout.columnSpan: 1
+                Layout.fillWidth: true
+            }
+            TextField {
+                id: "sublang"
+                placeholderText: "Sub-Language"
+                Layout.fillWidth: true
+            }
+            TextField {
+                id: "userAgent"
+                placeholderText: "User agent"
+                Layout.fillWidth: true
+            }
+            TextField {
+                id: "cookiesFromBrowser"
+                placeholderText: "Cookies from browser"
+                Layout.fillWidth: true
+            }
+            RowLayout {
+                TextField {
+                    id: "passAttribute"
+                    placeholderText: "Attribute"
+                    Layout.fillWidth: true
+                }
+                TextField {
+                    id: "passValue"
+                    placeholderText: "Value"
+                    Layout.fillWidth: true
+                }
+                Button {
+                    text: "Load password"
+                    onClicked: mf.loadPassword(passAttribute.text, passValue.text)
+                    Layout.fillWidth: true
+                }
             }
         }
     }

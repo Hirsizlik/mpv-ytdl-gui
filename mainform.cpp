@@ -57,7 +57,8 @@ convertFromVideoFormat(const rust::cxxbridge1::Vec<VideoFormat> &data)
 }
 
 void
-MainForm::loadFormats(const QString &username, const QString &url, const QString &cookiesFromBrowser)
+MainForm::loadFormats(const QString &username, const QString &url, const QString &cookiesFromBrowser,
+                      const QString &userAgent)
 {
     if (url.isEmpty()) {
         emit ytdlpError();
@@ -69,7 +70,7 @@ MainForm::loadFormats(const QString &username, const QString &url, const QString
     };
 
     ytFuture = QtConcurrent::run(load_video_formats, username.toStdString(), password.toStdString(), url.toStdString(),
-                                 cookiesFromBrowser.toStdString())
+                                 cookiesFromBrowser.toStdString(), userAgent.toStdString())
                    .then(videoToPair)
                    .onFailed([](std::runtime_error) { return std::make_pair("", QList<FormatData>()); });
     ytFutureWatcher.setFuture(ytFuture);
@@ -87,7 +88,8 @@ MainForm::formatsLoaded()
 }
 
 void
-MainForm::start(const QString &username, const QString &sublang, const QString &cookiesBrowser)
+MainForm::start(const QString &username, const QString &sublang, const QString &cookiesBrowser,
+                const QString &userAgent)
 {
     std::vector<FormatData> selectedFormats;
     for (qsizetype i = 0; i < formatsModel.rowCount(); ++i) {
@@ -111,6 +113,8 @@ MainForm::start(const QString &username, const QString &sublang, const QString &
         ytdlRawOptionList.emplaceBack("all-subs", "");
         if (!cookiesBrowser.isEmpty())
             ytdlRawOptionList.emplaceBack("cookies-from-browser", cookiesBrowser);
+        if (!userAgent.isEmpty())
+            ytdlRawOptionList.emplaceBack("user-agent", userAgent);
 
         if (username != "" && password != "") {
             ytdlRawOptionList.emplaceBack("username", username);
@@ -119,7 +123,7 @@ MainForm::start(const QString &username, const QString &sublang, const QString &
 
         QString ytdl_raw_options = "--ytdl-raw-options=";
         for (const auto &[k, v] : ytdlRawOptionList) {
-            ytdl_raw_options += k + "=" + v + ",";
+            ytdl_raw_options += k + "=\"" + v + "\",";
         }
         ytdl_raw_options.removeLast();
 
