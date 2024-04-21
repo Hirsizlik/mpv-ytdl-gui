@@ -2,8 +2,8 @@ import yt_dlp
 #import json
 
 def get_video_formats(video_url: str,
-                      password: str,
                       username: str,
+                      password: str,
                       cookiesBrowser: str) -> list[str]:
     yt_dlp_opts = {
         'username': username,
