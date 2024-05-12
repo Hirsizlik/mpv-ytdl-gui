@@ -40,7 +40,7 @@ FetchContent_MakeAvailable(Corrosion)
 corrosion_import_crate(MANIFEST_PATH rust/Cargo.toml)
 
 corrosion_add_cxxbridge(mpv-ytdl-gui-rs-cxx
-    CRATE mpv-ytdl-gui-rs
+    CRATE mpv_ytdl_gui_rs
     FILES lib.rs
 )
 
