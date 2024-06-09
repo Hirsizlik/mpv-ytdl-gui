@@ -10,6 +10,22 @@ ApplicationWindow {
     height: 600
     visible: true
 
+    function getFilesizeText(filesize, filesize_estimate) {
+        if (filesize == 0) {
+            return ""
+        }
+        let s = filesize_estimate ? "~" : "";
+        if (filesize > 2**30) {
+            s += (filesize / 2**30).toFixed(2) + " GiB"
+        } else if (filesize > 2**20) {
+            s += (filesize / 2**20).toFixed(2) + " MiB"
+        } else {
+            s += (filesize / 2**10).toFixed(2) + " kiB"
+        }
+
+        return s;
+    }
+
     SystemPalette {
         id: activePalette;
         colorGroup: SystemPalette.Active
@@ -140,9 +156,8 @@ ApplicationWindow {
                         }
                         Label {
                             width: listView.widthFilesize
-                            text: model.filesize > 0 ? (model.filesize / 2**20).toFixed(2) + " MiB" : ""
+                            text: getFilesizeText(model.filesize, model.filesize_estimate)
                             font.italic: model.filesize_estimate
-                            color: model.filesize_estimate ? activePalette.dark : activePalette.text
                         }
                     }
                 }
