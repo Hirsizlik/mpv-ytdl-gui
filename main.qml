@@ -137,27 +137,33 @@ ApplicationWindow {
                         Label {
                             width: listView.widthName
                             text: model.name
+                            clip: true
                         }
                         Label {
                             width: listView.widthResolution
                             text: model.resolution
+                            clip: true
                         }
                         Label {
                             width: listView.widthCodec
                             text: model.vcodec
+                            clip: true
                         }
                         Label {
                             width: listView.widthCodec
                             text: model.acodec
+                            clip: true
                         }
                         Label {
                             width: listView.widthFps
                             text: model.fps > 0 ? model.fps : ""
+                            clip: true
                         }
                         Label {
                             width: listView.widthFilesize
                             text: getFilesizeText(model.filesize, model.filesize_estimate)
                             font.italic: model.filesize_estimate
+                            clip: true
                         }
                     }
                 }
