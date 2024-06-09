@@ -47,6 +47,7 @@ main(int argc, char **argv)
     app.setOrganizationName("mpv-ytdl-gui");
     app.setApplicationName("mpv-ytdl-gui");
 
+    MainForm mf;
     QQmlApplicationEngine engine;
     const QUrl url(u"qrc:/qt/qml/mpvytdlgui/main.qml"_qs);
     QObject::connect(
@@ -56,7 +57,6 @@ main(int argc, char **argv)
                 QCoreApplication::exit(-1);
         },
         Qt::QueuedConnection);
-    MainForm mf;
     engine.rootContext()->setContextProperty("mf", &mf);
     engine.load(url);
 
