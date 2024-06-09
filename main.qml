@@ -6,8 +6,8 @@ import QtQuick.Window 2.11
 
 ApplicationWindow {
     id: window
-    width: 800
-    height: 500
+    width: 1024
+    height: 600
     visible: true
 
     SystemPalette {
@@ -64,41 +64,42 @@ ApplicationWindow {
                 boundsMovement: Flickable.StopAtBounds
                 clip: true
 
-                property int width0: 20
-                property int width1: listView.width / 22 * 5
-                property int width2: listView.width / 22 * 3
-                property int width3: listView.width / 22 * 3
-                property int width4: listView.width / 22 * 3
-                property int width5: listView.width / 22 * 1
-                property int width7: listView.width / 22 * 2
+                property int widthCb: 30
+                property int widthBase: (listView.width - widthCb) / 30
+
+                property int widthName: widthBase * 11
+                property int widthResolution: widthBase * 4
+                property int widthCodec: widthBase * 4 // (x2)
+                property int widthFps: widthBase * 1
+                property int widthFilesize: widthBase * 4
 
                 header: ColumnLayout {
                     Row {
                         Label {
-                            width: listView.width0
+                            width: listView.widthCb
                         }
                         Label {
-                            width: listView.width1
+                            width: listView.widthName
                             text: "<b>Name</b>"
                         }
                         Label {
-                            width: listView.width2
+                            width: listView.widthResolution
                             text: "<b>Resolution</b>"
                         }
                         Label {
-                            width: listView.width3
+                            width: listView.widthCodec
                             text: "<b>Video Codec</b>"
                         }
                         Label {
-                            width: listView.width4
+                            width: listView.widthCodec
                             text: "<b>Audio Codec</b>"
                         }
                         Label {
-                            width: listView.width5
+                            width: listView.widthFps
                             text: "<b>FPS</b>"
                         }
                         Label {
-                            width: listView.width7
+                            width: listView.widthFilesize
                             text: "<b>Filesize</b>"
                         }
                     }
@@ -107,7 +108,7 @@ ApplicationWindow {
                     height: 20
                     Row {
                         CheckBox {
-                            width: listView.width0
+                            width: listView.widthCb
                             height: parent.height
                             checked: model.selected
                             onClicked: {
@@ -118,27 +119,27 @@ ApplicationWindow {
                             }
                         }
                         Label {
-                            width: listView.width1
+                            width: listView.widthName
                             text: model.name
                         }
                         Label {
-                            width: listView.width2
+                            width: listView.widthResolution
                             text: model.resolution
                         }
                         Label {
-                            width: listView.width3
+                            width: listView.widthCodec
                             text: model.vcodec
                         }
                         Label {
-                            width: listView.width4
+                            width: listView.widthCodec
                             text: model.acodec
                         }
                         Label {
-                            width: listView.width5
+                            width: listView.widthFps
                             text: model.fps > 0 ? model.fps : ""
                         }
                         Label {
-                            width: listView.width7
+                            width: listView.widthFilesize
                             text: model.filesize > 0 ? (model.filesize / 2**20).toFixed(2) + " MiB" : ""
                             font.italic: model.filesize_estimate
                             color: model.filesize_estimate ? activePalette.dark : activePalette.text
