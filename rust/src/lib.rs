@@ -14,12 +14,12 @@ pub fn load_video_formats(
 ) -> Vec<VideoFormat> {
     pyo3::prepare_freethreaded_python();
     let result = Python::with_gil(|py| -> PyResult<Vec<VideoFormat>> {
-        let fun: Py<PyAny> = PyModule::from_code(py, PY_SCRIPT, "", "")?
+        let fun: Py<PyAny> = PyModule::from_code_bound(py, PY_SCRIPT, "", "")?
             .getattr("get_video_formats")?
             .into();
-        let args = PyTuple::new(py, &[url, username, password, cookies_browser, user_agent]);
+        let args = PyTuple::new_bound(py, &[url, username, password, cookies_browser, user_agent]);
         let fun_result = fun.call1(py, args)?;
-        let vfs: &PyTuple = fun_result.downcast::<PyTuple>(py)?;
+        let vfs = fun_result.downcast_bound::<PyTuple>(py)?;
         let duration_item = vfs.get_item(0)?;
         let duration = duration_item.extract();
         let duration = match duration {
