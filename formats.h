@@ -8,9 +8,8 @@ using filesize_t = unsigned long long;
 
 class FormatData {
   public:
-    explicit FormatData(const QString &id, const QString &name, const QString &resolution,
-                        const QString &vcodec, const QString &acodec, fps_t fps,
-                        filesize_t filesize, bool filesizeEstimate, double tbr);
+    explicit FormatData(const QString &id, const QString &name, const QString &resolution, const QString &vcodec,
+                        const QString &acodec, fps_t fps, filesize_t filesize, bool filesizeEstimate, double tbr);
     bool selected() const;
     void selected(bool);
     QString id() const;
@@ -55,7 +54,7 @@ class FormatDataModel : public QAbstractListModel {
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
-    void setFormatList(const QString &searchUrl, QList<FormatData> &&);
+    void setFormatList(const QString &searchUrl, const QList<FormatData> &);
     const QString &searchUrl() const;
     const FormatData &operator[](qsizetype idx) const;
 
@@ -65,6 +64,34 @@ class FormatDataModel : public QAbstractListModel {
   private:
     QList<FormatData> m_formats;
     QString m_searchUrl;
+};
+
+class QVideoData {
+  public:
+    explicit QVideoData(): duration(0)
+    {
+    }
+    explicit QVideoData(const QString &name, uint64_t duration, QList<FormatData> formats)
+        : title(name), duration(duration), formats(formats)
+    {
+    }
+    const QString &getTitle() const noexcept
+    {
+        return title;
+    }
+    uint64_t getDuration() const noexcept
+    {
+        return duration;
+    }
+    const QList<FormatData> getFormats() const noexcept
+    {
+        return formats;
+    }
+
+  private:
+    QString title;
+    uint64_t duration;
+    QList<FormatData> formats;
 };
 
 #endif

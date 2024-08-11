@@ -1,11 +1,10 @@
 #include "formats.h"
 #include <qnamespace.h>
 
-FormatData::FormatData(const QString &id, const QString &name, const QString &resolution,
-                       const QString &vcodec, const QString &acodec, fps_t fps,
-                       filesize_t filesize, bool filesizeEstimate, double tbr)
-    : m_id(id), m_name(name), m_resolution(resolution), m_vcodec(vcodec), m_acodec(acodec),
-      m_fps(fps), m_filesize(filesize), m_filesizeEstimate(filesizeEstimate), m_tbr(tbr)
+FormatData::FormatData(const QString &id, const QString &name, const QString &resolution, const QString &vcodec,
+                       const QString &acodec, fps_t fps, filesize_t filesize, bool filesizeEstimate, double tbr)
+    : m_id(id), m_name(name), m_resolution(resolution), m_vcodec(vcodec), m_acodec(acodec), m_fps(fps),
+      m_filesize(filesize), m_filesizeEstimate(filesizeEstimate), m_tbr(tbr)
 {
 }
 
@@ -16,7 +15,8 @@ FormatData::selected() const
 }
 
 void
-FormatData::selected(bool newValue) {
+FormatData::selected(bool newValue)
+{
     m_selected = newValue;
 }
 
@@ -116,7 +116,9 @@ FormatDataModel::data(const QModelIndex &index, int role) const
     }
 }
 
-bool FormatDataModel::setData(const QModelIndex &index, const QVariant &value, int role) {
+bool
+FormatDataModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
     if (role != SelectedRole || index.row() < 0 || index.row() >= m_formats.count()) {
         return false;
     }
@@ -144,11 +146,11 @@ FormatDataModel::roleNames() const
 }
 
 void
-FormatDataModel::setFormatList(const QString &searchUrl, QList<FormatData> &&list)
+FormatDataModel::setFormatList(const QString &searchUrl, const QList<FormatData> &list)
 {
     beginResetModel();
     m_searchUrl = searchUrl;
-    m_formats = std::move(list);
+    m_formats = list;
     endResetModel();
 }
 

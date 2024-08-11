@@ -18,4 +18,4 @@ def get_video_formats(video_url: str,
     with yt_dlp.YoutubeDL(yt_dlp_opts) as ydl:
         info_dict = ydl.extract_info(url=video_url, download=False)
         # print(json.dumps(info_dict, indent=2))
-        return (info_dict["duration"], info_dict["formats"])
+        return (info_dict["title"], info_dict["duration"], info_dict["formats"])

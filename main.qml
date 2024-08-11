@@ -60,6 +60,22 @@ ApplicationWindow {
             Layout.columnSpan: 3;
             Layout.fillWidth: true
         }
+        TextEdit {
+            id: "videoTitle"
+            Layout.columnSpan: 2
+            Layout.fillWidth: true
+            leftPadding: 5
+            readOnly: true
+            selectByMouse: true
+            color: activePalette.text
+            font.bold: true
+            text: mf.videoTitle
+        }
+        Label {
+            id: "videoDuration"
+            Layout.columnSpan: 1
+            text: mf.videoDuration
+        }
         ScrollView {
             implicitHeight: window.height - videoUrl.height - start.height - 20
             Layout.columnSpan: 3

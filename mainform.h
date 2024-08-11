@@ -14,6 +14,8 @@ class MainForm : public QObject {
     Q_OBJECT
     Q_PROPERTY(FormatDataModel *formatsModel READ getFormatsModel NOTIFY formatsChanged)
     Q_PROPERTY(bool hasPassword READ hasPassword)
+    Q_PROPERTY(QString videoTitle READ getVideoTitle NOTIFY videoChanged)
+    Q_PROPERTY(QString videoDuration READ getVideoDuration NOTIFY videoChanged)
 
   public:
     explicit MainForm(QObject *parent = nullptr);
@@ -26,6 +28,14 @@ class MainForm : public QObject {
     {
         return !password.isEmpty();
     };
+    const QString &getVideoTitle() const
+    {
+        return videoTitle;
+    }
+    const QString &getVideoDuration() const
+    {
+        return videoDuration;
+    }
 
   public slots:
     void loadPassword(const QString &p1, const QString &p2);
@@ -37,6 +47,7 @@ class MainForm : public QObject {
 
   signals:
     void formatsChanged();
+    void videoChanged();
     void ytdlpError();
     void passwordError();
     void noSelectionError();
@@ -44,8 +55,10 @@ class MainForm : public QObject {
   private:
     QString password;
     PasswordHandler *passwordHandler = new PasswordHandler();
+    QString videoTitle;
+    QString videoDuration;
     FormatDataModel formatsModel;
-    using FormatPair = std::pair<QString, QList<FormatData>>;
+    using FormatPair = std::pair<QString, QVideoData>;
     QFuture<FormatPair> ytFuture;
     QFutureWatcher<FormatPair> ytFutureWatcher;
 

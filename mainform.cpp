@@ -46,14 +46,14 @@ map(const VideoFormat &data)
                       vcodec, acodec, data.fps, data.filesize, data.filesize_is_estimate, data.tbr);
 }
 
-QList<FormatData>
-convertFromVideoFormat(const rust::cxxbridge1::Vec<VideoFormat> &data)
+QVideoData
+convertFromVideoFormat(const VideoData &data)
 {
     QList<FormatData> list;
-    for (const VideoFormat &vf : data) {
+    for (const VideoFormat &vf : data.formats) {
         list.emplaceBack(map(vf));
     }
-    return list;
+    return QVideoData(QString::fromUtf8(data.name), data.duration, list);
 }
 
 void
@@ -65,14 +65,12 @@ MainForm::loadFormats(const QString &username, const QString &url, const QString
         return;
     }
 
-    auto videoToPair = [url](rust::cxxbridge1::Vec<VideoFormat> data) {
-        return std::make_pair(url, convertFromVideoFormat(data));
-    };
+    auto videoToPair = [url](VideoData data) { return std::make_pair(url, convertFromVideoFormat(data)); };
 
     ytFuture = QtConcurrent::run(load_video_formats, username.toStdString(), password.toStdString(), url.toStdString(),
                                  cookiesFromBrowser.toStdString(), userAgent.toStdString())
                    .then(videoToPair)
-                   .onFailed([](std::runtime_error) { return std::make_pair("", QList<FormatData>()); });
+                   .onFailed([](std::runtime_error) { return std::make_pair("", QVideoData()); });
     ytFutureWatcher.setFuture(ytFuture);
 }
 
@@ -80,10 +78,15 @@ void
 MainForm::formatsLoaded()
 {
     FormatPair result = ytFutureWatcher.future().result();
-    if (result.second.empty()) {
+    if (result.second.getTitle().isEmpty()) {
         emit ytdlpError();
     } else {
-        formatsModel.setFormatList(result.first, std::move(result.second));
+        videoTitle = result.second.getTitle();
+        auto d = result.second.getDuration();
+        QTime duration(d / 3600, d / 60 % 60, d % 60);
+        videoDuration = duration.toString();
+        formatsModel.setFormatList(result.first, result.second.getFormats());
+        emit videoChanged();
     }
 }
 
