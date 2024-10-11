@@ -1,8 +1,8 @@
 #include "mainform.h"
+#include <array>
 #include <cstring>
 #include <exception>
 #include <iostream>
-#include <unistd.h>
 #include "mpv-ytdl-gui-rs-cxx/lib.h"
 #include "rust/cxx.h"
 #include "formats.h"
@@ -111,34 +111,34 @@ MainForm::start(const QString &username, const QString &sublang, const QString &
         [](const QString &f1, const QString &f2) -> QString { return f1.isEmpty() ? f2 : f1 + "," + f2; },
         [](const FormatData &f) -> QString { return f.id(); });
 
-    if (0 == fork()) {
-        QList<std::pair<QString, QString>> ytdlRawOptionList;
-        ytdlRawOptionList.emplaceBack("all-subs", "");
-        if (!cookiesBrowser.isEmpty())
-            ytdlRawOptionList.emplaceBack("cookies-from-browser", cookiesBrowser);
-        if (!userAgent.isEmpty())
-            ytdlRawOptionList.emplaceBack("user-agent", userAgent);
+    QList<std::pair<QString, QString>> ytdlRawOptionList;
+    ytdlRawOptionList.emplaceBack("all-subs", "");
+    if (!cookiesBrowser.isEmpty())
+        ytdlRawOptionList.emplaceBack("cookies-from-browser", cookiesBrowser);
+    if (!userAgent.isEmpty())
+        ytdlRawOptionList.emplaceBack("user-agent", userAgent);
 
-        if (username != "" && password != "") {
-            ytdlRawOptionList.emplaceBack("username", username);
-            ytdlRawOptionList.emplaceBack("password", password);
-        }
-
-        QString ytdl_raw_options = "--ytdl-raw-options=";
-        for (const auto &[k, v] : ytdlRawOptionList) {
-            ytdl_raw_options += k + "=\"" + v + "\",";
-        }
-        ytdl_raw_options.removeLast();
-
-        auto ytdl_format = QString(R"(--ytdl-format=%1)").arg(formats);
-        QString slang_param;
-        if (!sublang.isEmpty()) {
-            slang_param = "--slang=" + sublang;
-        } else {
-            slang_param = "";
-        }
-
-        execlp("mpv", "mpv", qPrintable(ytdl_raw_options), qPrintable(ytdl_format), qPrintable(slang_param),
-               qPrintable(formatsModel.searchUrl()), "--player-operation-mode=pseudo-gui", (char *)NULL);
+    if (username != "" && password != "") {
+        ytdlRawOptionList.emplaceBack("username", username);
+        ytdlRawOptionList.emplaceBack("password", password);
     }
+
+    QString ytdl_raw_options = "--ytdl-raw-options=";
+    for (const auto &[k, v] : ytdlRawOptionList) {
+        ytdl_raw_options += k + "=\"" + v + "\",";
+    }
+    ytdl_raw_options.removeLast();
+
+    auto ytdl_format = QString(R"(--ytdl-format=%1)").arg(formats);
+    QString slang_param;
+    if (!sublang.isEmpty()) {
+        slang_param = "--slang=" + sublang;
+    } else {
+        slang_param = "";
+    }
+    QStringList callArgs{
+        ytdl_raw_options, ytdl_format, slang_param, formatsModel.searchUrl(), "--player-operation-mode=pseudo-gui",
+    };
+    qInfo().noquote() << "mpv" << callArgs.join(' ');
+    QProcess::startDetached("mpv", callArgs);
 }
