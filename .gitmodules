@@ -1,3 +1,0 @@
-[submodule "external/libbacktrace"]
-	path = external/libbacktrace
-	url = https://github.com/ianlancetaylor/libbacktrace
