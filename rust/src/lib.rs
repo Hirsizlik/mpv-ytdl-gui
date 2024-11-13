@@ -1,7 +1,8 @@
 use ffi::{VideoData, VideoFormat};
 use pyo3::exceptions::PyTypeError;
+use pyo3::prelude::*;
 use pyo3::types::{PyDict, PyList, PyTuple};
-use pyo3::{prelude::*, PyDowncastError};
+use pyo3::DowncastIntoError;
 
 const PY_SCRIPT: &str = include_str!("get_video_formats.py");
 
@@ -28,12 +29,12 @@ pub fn load_video_formats(
             Err(_) => duration_item.extract::<f64>()? as u64,
         };
 
-        let format_list: &PyList = vfs.get_item(2)?.extract()?;
+        let format_list: Bound<PyList> = vfs.get_item(2)?.extract()?;
 
         let r = format_list
             .iter()
-            .map(|i| i.downcast::<PyDict>())
-            .collect::<Result<Vec<&PyDict>, PyDowncastError>>()?
+            .map(|i| i.downcast_into::<PyDict>())
+            .collect::<Result<Vec<Bound<PyDict>>, DowncastIntoError>>()?
             .iter()
             .map(|i| read_list_item(i, duration))
             .collect::<Result<Vec<VideoFormat>, PyErr>>()?;
@@ -57,7 +58,7 @@ pub fn load_video_formats(
     }
 }
 
-fn read_list_item(list_item: &PyDict, duration: u64) -> PyResult<VideoFormat> {
+fn read_list_item(list_item: &Bound<PyDict>, duration: u64) -> PyResult<VideoFormat> {
     let id: String = list_item
         .get_item("format_id")?
         .ok_or(PyTypeError::new_err("No format_id"))?
@@ -98,7 +99,7 @@ fn read_list_item(list_item: &PyDict, duration: u64) -> PyResult<VideoFormat> {
     })
 }
 
-fn get_or_default<'a, T>(list_item: &'a PyDict, key: &str, default: T) -> Result<T, PyErr>
+fn get_or_default<'a, T>(list_item: &'a Bound<PyDict>, key: &str, default: T) -> Result<T, PyErr>
 where
     T: pyo3::FromPyObject<'a>,
 {

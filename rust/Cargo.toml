@@ -6,7 +6,7 @@ edition = "2021"
 
 [dependencies]
 cxx = "1.0"
-pyo3 = "0.21"
+pyo3 = "0.22"
 
 [dev-dependencies]
 cxxbridge-cmd = "1.0"
