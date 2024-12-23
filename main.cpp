@@ -27,7 +27,7 @@ main(int argc, char **argv)
     app.setApplicationName("mpv-ytdl-gui");
     MainForm mf;
     QQmlApplicationEngine engine;
-    const QUrl url(u"qrc:/qt/qml/mpvytdlgui/main.qml"_qs);
+    const QUrl url("qrc:/qt/qml/mpvytdlgui/main.qml");
     QObject::connect(
         &engine, &QQmlApplicationEngine::objectCreated, &app,
         [url](QObject *obj, const QUrl &objUrl) {
