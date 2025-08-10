@@ -91,7 +91,7 @@ ApplicationWindow {
                 highlightMoveVelocity: -1
                 leftMargin: 2
                 topMargin: 2
-                bottomMargin: 2
+                bottomMargin: 12
                 rightMargin: 2
                 boundsMovement: Flickable.StopAtBounds
                 clip: true
